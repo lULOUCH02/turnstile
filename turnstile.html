@@ -1,6 +1,15 @@
 <html>
   <head>
-   
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self' https://challenges.cloudflare.com;
+      script-src 'self' https://challenges.cloudflare.com;
+      connect-src *;
+      img-src *;
+      style-src 'self' 'unsafe-inline';
+      frame-src https://challenges.cloudflare.com;
+      base-uri 'self';
+      form-action 'none';
+    ">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   </head>
   <body>
