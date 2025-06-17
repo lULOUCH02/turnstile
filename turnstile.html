@@ -3,18 +3,18 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://challenges.cloudflare.com">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
-      body {
+      html, body {
         margin: 0;
         padding: 0;
+        background: transparent; /* خلفية شفافة */
         display: flex;
-        justify-content: center; /* توسيط أفقي */
-        align-items: flex-start; /* تثبيت في الأعلى */
+        justify-content: center;
+        align-items: flex-start;
         height: 100vh;
-        background-color: #f5f5f5; /* اختياري: لون خلفية */
       }
 
       .cf-turnstile {
-        margin-top: 0px; /* مسافة من الأعلى */
+        margin-top: 0px;
       }
     </style>
   </head>
