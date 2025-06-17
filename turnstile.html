@@ -2,6 +2,21 @@
   <head>
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://challenges.cloudflare.com">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center; /* توسيط أفقي */
+        align-items: flex-start; /* تثبيت في الأعلى */
+        height: 100vh;
+        background-color: #f5f5f5; /* اختياري: لون خلفية */
+      }
+
+      .cf-turnstile {
+        margin-top: 20px; /* مسافة من الأعلى */
+      }
+    </style>
   </head>
   <body>
     <div class="cf-turnstile" data-sitekey="0x4AAAAAABg3aZzH133hTwHb" data-callback="onVerify"></div>
