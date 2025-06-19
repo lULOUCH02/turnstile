@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  </head>
+  <body>
+    <form id="demo-form">
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAABhm9noi0SWGb8pL"></div>
+      <button type="submit">Get Token</button>
+    </form>
+    <script>
+      document.getElementById("demo-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const token = document.querySelector("[name=cf-turnstile-response]").value;
+        console.log("TOKEN:", token);
+        alert("Token:\n" + token);
+      });
+    </script>
+  </body>
+</html>
