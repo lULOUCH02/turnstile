@@ -17,7 +17,7 @@
 </head>
 <body>
 
-<div id="info">📍 جاري تحديد الموقع...</div>
+
 <div id="map"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -37,7 +37,7 @@
 
       map.setView([lat, lon], 16);
       marker = L.marker([lat, lon]).addTo(map)
-        .bindPopup(`📍 موقعك الحالي<br>الدقة: ${Math.round(acc)} متر`).openPopup();
+        .bindPopup(`موقعك الحالي<br>الدقة: ${Math.round(acc)} متر`).openPopup();
     }, function(error) {
       document.getElementById("info").textContent = "⚠️ لم نتمكن من تحديد الموقع: " + error.message;
     }, {
