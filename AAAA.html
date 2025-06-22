@@ -38,9 +38,6 @@
       map.setView([lat, lon], 16);
       marker = L.marker([lat, lon]).addTo(map)
         .bindPopup(`📍 موقعك الحالي<br>الدقة: ${Math.round(acc)} متر`).openPopup();
-
-      document.getElementById("info").innerHTML =
-        `✅ تم تحديد الموقع بدقة: ${Math.round(acc)} متر<br>📍 خط العرض: ${lat.toFixed(6)}<br>📍 خط الطول: ${lon.toFixed(6)}`;
     }, function(error) {
       document.getElementById("info").textContent = "⚠️ لم نتمكن من تحديد الموقع: " + error.message;
     }, {
