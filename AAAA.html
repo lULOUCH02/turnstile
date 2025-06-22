@@ -2,78 +2,44 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>تحديد موقعي باستخدام OpenStreetMap</title>
+  <title>تحديد موقعي تلقائيًا باستخدام OpenStreetMap</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     body { margin: 0; font-family: sans-serif; }
-    #map { height: 90vh; width: 100%; }
-    #controls {
-      padding: 10px;
-      text-align: center;
-      background: #f0f0f0;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+    #map { height: 100vh; width: 100%; }
   </style>
 </head>
 <body>
 
-  <div id="controls">
-    <button onclick="locateMe()">📍 تحديد موقعي الآن</button>
-  </div>
   <div id="map"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     var map = L.map('map').setView([0, 0], 2);
-    var marker; // لتحديث الموقع بدلاً من إنشاء Marker جديد كل مرة
+    var marker;
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    function locateMe() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          var lat = position.coords.latitude;
-          var lon = position.coords.longitude;
+    // تحديد الموقع تلقائيًا
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var lat = position.coords.latitude;
+        var lon = position.coords.longitude;
 
-          map.setView([lat, lon], 15);
+        map.setView([lat, lon], 15);
 
-          if (marker) {
-            marker.setLatLng([lat, lon]);
-          } else {
-            marker = L.marker([lat, lon]).addTo(map)
-              .bindPopup('📍 أنت هنا').openPopup();
-          }
-        }, function(error) {
-          alert('تعذر تحديد الموقع: ' + error.message);
-        });
-      } else {
-        alert('المتصفح لا يدعم تحديد الموقع الجغرافي.');
-      }
-    }
-
-    
-    navigator.geolocation.watchPosition(function(position) {
-      var lat = position.coords.latitude;
-      var lon = position.coords.longitude;
-
-      map.setView([lat, lon], 15);
-
-      if (marker) {
-        marker.setLatLng([lat, lon]);
-      } else {
         marker = L.marker([lat, lon]).addTo(map)
-          .bindPopup('📍 تتحرك الآن').openPopup();
-      }
-    }, function(error) {
-      console.error("خطأ في تتبع الموقع:", error.message);
-    });
-   
+          .bindPopup('📍 تم تحديد موقعك تلقائيًا')
+          .openPopup();
+
+      }, function(error) {
+        alert('تعذر تحديد الموقع: ' + error.message);
+      });
+    } else {
+      alert('المتصفح لا يدعم تحديد الموقع الجغرافي.');
+    }
   </script>
 </body>
 </html>
