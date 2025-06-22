@@ -2,11 +2,12 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>تتبع موقعي بدقة</title>
+  <title>تحديد الموقع</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    body { margin: 0; font-family: sans-serif; direction: rtl; }
     #map { height: 90vh; width: 100%; }
+    body { margin: 0; font-family: sans-serif; direction: rtl; }
     #info {
       padding: 10px;
       background: #f0f0f0;
@@ -16,51 +17,41 @@
 </head>
 <body>
 
-  <div id="info">📍 جاري تحديد الموقع...</div>
-  <div id="map"></div>
+<div id="info">📍 جاري تحديد الموقع...</div>
+<div id="map"></div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script>
-    var map = L.map('map').setView([0, 0], 2);
-    var marker;
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  var map = L.map('map').setView([0, 0], 2);
+  var marker;
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-    console.log("المتصفح يدعم الموقع؟", navigator.geolocation ? "نعم ✅" : "لا ❌");
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
 
-    if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(function(position) {
-        var lat = position.coords.latitude;
-        var lon = position.coords.longitude;
-        var accuracy = position.coords.accuracy;
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var lat = position.coords.latitude;
+      var lon = position.coords.longitude;
+      var acc = position.coords.accuracy;
 
-        // تحديث المعلومات النصية
-        document.getElementById('info').innerHTML =
-          `📍 خط العرض: ${lat.toFixed(6)}<br>
-           📍 خط الطول: ${lon.toFixed(6)}<br>
-           🎯 الدقة: ${Math.round(accuracy)} متر`;
+      map.setView([lat, lon], 16);
+      marker = L.marker([lat, lon]).addTo(map)
+        .bindPopup(`📍 موقعك الحالي<br>الدقة: ${Math.round(acc)} متر`).openPopup();
 
-        // تحديث الخريطة والموقع
-        map.setView([lat, lon], 16);
+      document.getElementById("info").innerHTML =
+        `✅ تم تحديد الموقع بدقة: ${Math.round(acc)} متر<br>📍 خط العرض: ${lat.toFixed(6)}<br>📍 خط الطول: ${lon.toFixed(6)}`;
+    }, function(error) {
+      document.getElementById("info").textContent = "⚠️ لم نتمكن من تحديد الموقع: " + error.message;
+    }, {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    });
+  } else {
+    document.getElementById("info").textContent = "❌ المتصفح لا يدعم تحديد الموقع.";
+  }
+</script>
 
-        if (marker) {
-          marker.setLatLng([lat, lon]);
-        } else {
-          marker = L.marker([lat, lon]).addTo(map)
-                   .bindPopup('📍 موقعك الحالي').openPopup();
-        }
-
-      }, function(error) {
-        document.getElementById('info').textContent = "خطأ: " + error.message;
-      }, {
-        enableHighAccuracy: true,  // ← تفعيل الدقة العالية
-        maximumAge: 0,             // ← لا تستخدم نتائج قديمة
-        timeout: 10000             // ← مهلة قبل الفشل
-      });
-    } else {
-      document.getElementById('info').textContent = "المتصفح لا يدعم تحديد الموقع.";
-    }
-  </script>
 </body>
 </html>
