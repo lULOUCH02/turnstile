@@ -2,15 +2,21 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>تحديد موقعي تلقائيًا باستخدام OpenStreetMap</title>
+  <title>تتبع موقعي بدقة</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    body { margin: 0; font-family: sans-serif; }
-    #map { height: 100vh; width: 100%; }
+    body { margin: 0; font-family: sans-serif; direction: rtl; }
+    #map { height: 90vh; width: 100%; }
+    #info {
+      padding: 10px;
+      background: #f0f0f0;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
 
+  <div id="info">📍 جاري تحديد الموقع...</div>
   <div id="map"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -22,23 +28,37 @@
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // تحديد الموقع تلقائيًا
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
+      navigator.geolocation.watchPosition(function(position) {
         var lat = position.coords.latitude;
         var lon = position.coords.longitude;
+        var accuracy = position.coords.accuracy;
 
-        map.setView([lat, lon], 15);
+        // تحديث المعلومات النصية
+        document.getElementById('info').innerHTML =
+          `📍 خط العرض: ${lat.toFixed(6)}<br>
+           📍 خط الطول: ${lon.toFixed(6)}<br>
+           🎯 الدقة: ${Math.round(accuracy)} متر`;
 
-        marker = L.marker([lat, lon]).addTo(map)
-          .bindPopup('📍 تم تحديد موقعك تلقائيًا')
-          .openPopup();
+        // تحديث الخريطة والموقع
+        map.setView([lat, lon], 16);
+
+        if (marker) {
+          marker.setLatLng([lat, lon]);
+        } else {
+          marker = L.marker([lat, lon]).addTo(map)
+                   .bindPopup('📍 موقعك الحالي').openPopup();
+        }
 
       }, function(error) {
-        alert('تعذر تحديد الموقع: ' + error.message);
+        document.getElementById('info').textContent = "خطأ: " + error.message;
+      }, {
+        enableHighAccuracy: true,  // ← تفعيل الدقة العالية
+        maximumAge: 0,             // ← لا تستخدم نتائج قديمة
+        timeout: 10000             // ← مهلة قبل الفشل
       });
     } else {
-      alert('المتصفح لا يدعم تحديد الموقع الجغرافي.');
+      document.getElementById('info').textContent = "المتصفح لا يدعم تحديد الموقع.";
     }
   </script>
 </body>
